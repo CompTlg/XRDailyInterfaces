@@ -19,7 +19,7 @@ namespace AUIT.PropertyTransitions
 
         public GameObject debugObject;
         public CoordinateSystem onStartCoordinateSystem = CoordinateSystem.World;
-
+        
         [HideInInspector]
         public CoordinateSystem CurrentCoordinateSystem;
 

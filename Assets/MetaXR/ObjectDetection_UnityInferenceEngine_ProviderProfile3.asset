@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee0a5db7462b764094b0d8e02abcb8a, type: 3}
   m_Name: ObjectDetection_UnityInferenceEngine_ProviderProfile3
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks.AIBlocks::Meta.XR.BuildingBlocks.AIBlocks.UnityInferenceEngineProvider
-  supportedInferenceTypes: 0
+  supportedInferenceTypes: 4
   mode: 0
-  modelFile: {fileID: 0}
+  modelFile: {fileID: 5022602860645237092, guid: dfaa2ae915a59094f905addb51b3290a, type: 3}
   streamingAssetModel: {fileID: 0}
   useStreamingAsset: 0
   streamingAssetFileName: 
