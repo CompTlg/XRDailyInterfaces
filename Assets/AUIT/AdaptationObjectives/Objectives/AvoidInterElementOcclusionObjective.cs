@@ -11,7 +11,7 @@ namespace AUIT.AdaptationObjectives.Objectives
     public class AvoidInterElementOcclusionObjective : MultiElementObjective
     {
         [SerializeField]
-        private ContextSource<Camera> userContextSource;
+        public ContextSource<Camera> userContextSource;
 
         private List<(Vector3, Vector3)> _bounds = new List<(Vector3, Vector3)>();
         private bool _boundsInitialized = false;
@@ -19,18 +19,26 @@ namespace AUIT.AdaptationObjectives.Objectives
 
         private bool GetMeshBounds(GameObject go, out Vector3 boundsMin, out Vector3 boundsMax)
         {
+
+            
+
             boundsMin = Vector3.zero;
             boundsMax = Vector3.zero;
 
             MeshFilter meshFilter = go.GetComponent<MeshFilter>();
-            if (meshFilter == null || !meshFilter.mesh)
+
+           /* if (meshFilter == null || !meshFilter.mesh)
             {
                 Debug.LogError($"Mesh or MeshFilter is missing in {go.name}" +
                                $"This is required for the AvoidInterElementOcclusionObjective component.");
                 return false;
-            }
+            }*/
 
-            Mesh mesh = meshFilter.mesh;
+            //Mesh mesh = meshFilter.mesh;
+
+            //todo added to check with cube
+            Mesh mesh = go.transform.Find("Cube_COL").GetComponent<MeshCollider>().sharedMesh;
+
             Vector3[] vertices = mesh.vertices;
 
             float minX = vertices[0].x, minY = vertices[0].y, minZ = vertices[0].z;
@@ -54,6 +62,9 @@ namespace AUIT.AdaptationObjectives.Objectives
 
             return true;
         }
+
+        
+
         
         private void InitializeMeshBounds(Layout[] layouts)
         {
@@ -90,6 +101,13 @@ namespace AUIT.AdaptationObjectives.Objectives
                 };
 
             pointsScreenSpace = new();
+
+
+            if (userContextSource == null|| userContextSource.GetValue() == null)
+            {
+                return false;
+            }
+
             foreach (Vector3 bound in trsBounds)
             {
                 Vector3 boundToScreenPoint = userContextSource.GetValue().WorldToScreenPoint(bound);
@@ -117,6 +135,7 @@ namespace AUIT.AdaptationObjectives.Objectives
             {
                 Layout layout = optimizationTarget[i];
                 (Vector3, Vector3) bounds = _bounds[i];
+
                 if (CalcPolygonScreenSpace(layout, bounds, out List<Vector2> pointsScreenSpace))
                 {
                     polygonsScreenSpace.Add(pointsScreenSpace);
@@ -172,15 +191,15 @@ namespace AUIT.AdaptationObjectives.Objectives
         {
             float cost = 0f;
             elementsColliding = new List<int>();
-
             // Occlusion requires two elements, cost = 0 if only one element
             if (optimizationTargets.Length < 2)
             {
                 return cost;
             }
 
-            if (!_boundsInitialized)
+            if (!_boundsInitialized || _bounds.Count != optimizationTargets.Length)
             {
+                _bounds.Clear();
                 InitializeMeshBounds(optimizationTargets);
                 _boundsInitialized = true;
             }
@@ -191,7 +210,7 @@ namespace AUIT.AdaptationObjectives.Objectives
             {
                 for (int j = i + 1; j < polygonsScreenSpace.Count; j++)
                 {
-                    // Debug.Log($"checking {i} {j} {PolygonsOverlap(polygonsScreenSpace[i], polygonsScreenSpace[j])}");
+                    //Debug.Log($" {i} {j} {PolygonsOverlap(polygonsScreenSpace[i], polygonsScreenSpace[j])}");
                     if (PolygonsOverlap(polygonsScreenSpace[i], polygonsScreenSpace[j]))
                     {
                         elementsColliding.Add(i);
@@ -202,7 +221,6 @@ namespace AUIT.AdaptationObjectives.Objectives
             }
 
             float combinations = auit.gameObjectsToOptimize.Count * (auit.gameObjectsToOptimize.Count - 1) / 2;
-            
             return cost / combinations;
         }
 

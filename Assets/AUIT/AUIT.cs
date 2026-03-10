@@ -11,8 +11,9 @@ using AUIT.AdaptationObjectives.Definitions;
 using AUIT.Constraints;
 using AUIT.Extras;
 using Cysharp.Threading.Tasks;
+#if UNITY_EDITOR            
 using UnityEditor;
-
+#endif
 namespace AUIT
 {
     public sealed class AUIT : MonoBehaviour
@@ -60,7 +61,7 @@ namespace AUIT
         // flag to signal that the manager has been initialized
         [NonSerialized]
         public bool initialized = false;
-
+        
         // NOTE: This is where all the multi-element objectives are stored
         public List<MultiElementObjective> MultiElementObjectives { get; } = new ();
         
@@ -326,6 +327,7 @@ namespace AUIT
         /// </remarks>
         public void Adapt(UIConfiguration[] layouts)
         {
+            
             if (!isActiveAndEnabled)
             {
                 Debug.LogError($"[AdaptationManager.Adapt(layout)]: AdaptationManager on " +
@@ -454,6 +456,29 @@ namespace AUIT
 
             MultiElementObjectives.Remove(multiElementObjective);
         }
+
+        public void RefreshOptimizationObjects()
+        {
+            int size = gameObjectsToOptimize.Count;
+           _gameObjects = new (GameObject, LocalObjectiveHandler)[size];
+            GameObject[] gameObjectsArray = gameObjectsToOptimize.ToArray();
+
+            for (int i = 0; i < _gameObjects.Length; i++)
+            {
+                LocalObjectiveHandler goLocalObjectiveHandler = gameObjectsArray[i]
+                    .GetComponent<LocalObjectiveHandler>();
+                if (goLocalObjectiveHandler == null)
+                {
+                    Debug.LogWarning("No objectives / objective handler found in " +
+                                   $"{gameObjectsArray[i].name}!");
+                }
+                _gameObjects[i] = (gameObjectsArray[i],
+                    gameObjectsArray[i].GetComponent<LocalObjectiveHandler>());
+            }
+
+            InitializeSolver();
+
+        }
     }
 
     public enum Backend
@@ -480,6 +505,7 @@ namespace AUIT
         public string solver;
     }
 
+    #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(BackendSolver))]
     public class BackendSolverDrawer : PropertyDrawer
     {
@@ -534,4 +560,5 @@ namespace AUIT
             return EditorGUIUtility.singleLineHeight * 2 + 4; // Adjust height to fit two fields
         }
     }
+    #endif
 }
