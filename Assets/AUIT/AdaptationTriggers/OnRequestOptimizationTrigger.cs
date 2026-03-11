@@ -67,7 +67,7 @@ namespace AUIT.AdaptationTriggers
     }
     
     
-    
+    #if UNITY_EDITOR
     [CustomEditor(typeof(OnRequestOptimizationTrigger))]
     public class MyComponentEditor : Editor
     {
@@ -84,4 +84,5 @@ namespace AUIT.AdaptationTriggers
             }
         }
     }
+    #endif
 }
