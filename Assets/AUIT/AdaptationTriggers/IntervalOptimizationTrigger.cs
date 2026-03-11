@@ -34,7 +34,7 @@ namespace AUIT.AdaptationTriggers
             Debug.Log("Interval Optimization Running...");
             
             OptimizationResponse response = await Auit.OptimizeLayout();
-            
+            if(response!= null)
             Auit.Adapt(response.solutions);
             await UniTask.Delay(TimeSpan.FromSeconds(interval));
             ApplyStrategy();

@@ -123,6 +123,7 @@ namespace AUIT.AdaptationObjectives
             }
 
             totalCost = Mathf.Clamp01(totalCost);
+
             return totalCost;
         }
 

@@ -255,6 +255,7 @@ namespace AUIT.AdaptationObjectives.Objectives
         
     }
     
+    #if UNITY_EDITOR
     [CustomEditor(typeof(FieldOfViewGridObjective))]
     public class FieldOfViewGridObjectiveEditor : Editor
     {
@@ -317,4 +318,5 @@ namespace AUIT.AdaptationObjectives.Objectives
         }
 
     }
+    #endif
 }
