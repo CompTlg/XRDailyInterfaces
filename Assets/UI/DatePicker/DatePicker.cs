@@ -703,6 +703,52 @@ namespace UI.Dates
             return type;
         }
 
+
+        /// <summary>
+        /// Called by DayButton
+        /// This is edited from the day button to have weatherButton functionality, 
+        /// but it is still called by the day button when a day is selected, 
+        /// and it still updates the selected date(s) and the display accordingly
+        /// 
+        /// Basically this is the one rewritten for AUIT seminar project
+        /// </summary>
+        /// <param name="date"></param>
+        public void WeatherButtonClicked(DateTime date)
+        {
+            if (DateSelectionMode == Dates.DateSelectionMode.SingleDate)
+            {
+                SelectedDate = date;
+            }
+            else //this part will never be entered in the project but keeping to save from errors
+            {
+                if (SelectedDates.Any(d => d == date))
+                {
+                    SelectedDates.Remove(date);
+                }
+                else
+                {
+                    SelectedDates.Add(date);
+                }
+            }
+
+            if (Ref_DatePicker_DateRange != null)
+            {
+                Ref_DatePicker_DateRange.DateSelected(date);
+            }
+
+            if (Config.Events.OnDaySelected != null)
+            {
+                Config.Events.OnDaySelected.Invoke(date);
+            }
+
+            UpdateDisplay();
+
+            // I would have preferred to have this react automatically to changes,
+            // but that would mean setting up an observable list, which is an added
+            // complication we don't need right now
+            UpdateInputFieldText();
+        }
+
         /// <summary>
         /// Called by DayButton
         /// </summary>
