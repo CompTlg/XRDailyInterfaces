@@ -133,14 +133,14 @@ public class SimplePrefabSpawner : MonoBehaviour
                             GameObject hand = GameObject.Find("RightControllerAnchor"); 
                                 if (hand != null)
                                 {
-                                    rootObject.transform.SetParent(hand.transform);
+                                    //rootObject.transform.SetParent(hand.transform);
                                     //todo currently grabbed object has to be removed from optimization
 
                                 }
                         }
                     if (OVRInput.GetUp(OVRInput.Button.One))
                     {
-                        rootObject.transform.SetParent(null);
+                        //rootObject.transform.SetParent(null);
                     }
                 }
 }
