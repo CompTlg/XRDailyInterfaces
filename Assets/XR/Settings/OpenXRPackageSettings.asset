@@ -396,6 +396,7 @@ MonoBehaviour:
   m_Name: ARAnchorFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Anchor'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-anchor
@@ -605,6 +606,7 @@ MonoBehaviour:
   m_Name: DisplayUtilitiesFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: Display Utilities'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.androidxr-display-utilities
@@ -674,6 +676,7 @@ MonoBehaviour:
   m_Name: ARFaceFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Face'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-face
@@ -718,7 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f647cc0545697264a9878224faada6d5, type: 3}
   m_Name: MetaQuestFeature Android
   m_EditorClassIdentifier: 
-  m_enabled: 1
+  m_enabled: 0
   nameUi: Meta Quest Support
   version: 1.0.0
   featureIdInternal: com.unity.openxr.feature.metaquest
@@ -837,23 +840,8 @@ MonoBehaviour:
   m_Name: Android
   m_EditorClassIdentifier: 
   features:
-  - {fileID: 6694308720589997164}
-  - {fileID: -1293773835941179653}
-  - {fileID: 3687686609071058410}
-  - {fileID: 735243603451457291}
-  - {fileID: -5858444468698107313}
-  - {fileID: -1767897429826689119}
-  - {fileID: 6023493093405289671}
-  - {fileID: -3431392868093229210}
-  - {fileID: 5336594498681388779}
-  - {fileID: 5728002393024865594}
-  - {fileID: -348187429060981357}
-  - {fileID: 3724820147761404505}
-  - {fileID: -3689208473183484465}
-  - {fileID: -2186558630379821674}
   - {fileID: -5906608252702807154}
   - {fileID: -8161957292256926877}
-  - {fileID: -4668447666386784508}
   - {fileID: 1697238671499355758}
   - {fileID: -2262522482964328841}
   - {fileID: 4746087976659597858}
@@ -865,17 +853,6 @@ MonoBehaviour:
   - {fileID: -2800899593012572141}
   - {fileID: 3160428355148732979}
   - {fileID: -707574369939328163}
-  - {fileID: -6623828986677238788}
-  - {fileID: 5251965163638866916}
-  - {fileID: -6311827657409957063}
-  - {fileID: 1627562732198614631}
-  - {fileID: 7933616037960590811}
-  - {fileID: 543867052034817856}
-  - {fileID: 7720696696257205287}
-  - {fileID: -7667344241249615491}
-  - {fileID: 6749007911636562479}
-  - {fileID: 3843482999075071059}
-  - {fileID: 3342171795835727805}
   - {fileID: -2292766304539463496}
   - {fileID: 2526612458840198097}
   - {fileID: -4662536582232341175}
@@ -952,6 +929,7 @@ MonoBehaviour:
   m_Name: AndroidXRHandMeshData Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: Hand Mesh Data'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.androidxr-hand-mesh-data
@@ -961,6 +939,7 @@ MonoBehaviour:
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  m_SuccessfullyInitialized: 0
 --- !u!114 &-1767897429826689119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,6 +953,7 @@ MonoBehaviour:
   m_Name: ARBoundingBoxFeature Android
   m_EditorClassIdentifier: Unity.XR.AndroidOpenXR::UnityEngine.XR.OpenXR.Features.Android.ARBoundingBoxFeature
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Bounding Box'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-bounding-box
@@ -1085,6 +1065,7 @@ MonoBehaviour:
   m_Name: OpenXRLifeCycleFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 
   version: 0.1.0
   featureIdInternal: AndroidXR-OpenXRLifeCycle
@@ -1252,6 +1233,7 @@ MonoBehaviour:
   m_Name: ARRaycastFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Raycast'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-raycast
@@ -1426,6 +1408,7 @@ MonoBehaviour:
   m_Name: AndroidXRSupportFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: Android XR Support
   version: 1.0.0
   featureIdInternal: com.unity.openxr.feature.androidxr-support
@@ -1611,8 +1594,6 @@ MonoBehaviour:
   m_Name: Standalone
   m_EditorClassIdentifier: 
   features:
-  - {fileID: 8506705145220412452}
-  - {fileID: -2530103391015134824}
   - {fileID: -4485780630590020005}
   - {fileID: -583631094705895504}
   - {fileID: -1355883664832029253}
@@ -1625,17 +1606,6 @@ MonoBehaviour:
   - {fileID: 6081394427205405371}
   - {fileID: -2565001854587977616}
   - {fileID: -8994761958518824186}
-  - {fileID: -8963986417845364847}
-  - {fileID: 6610115192380458281}
-  - {fileID: 4213538014534155446}
-  - {fileID: 33092582634209121}
-  - {fileID: -6089547845464664899}
-  - {fileID: -8274049823719070503}
-  - {fileID: -25137534403681439}
-  - {fileID: -2875825989199097476}
-  - {fileID: 4497985269040547862}
-  - {fileID: 1962451927931416542}
-  - {fileID: -910761248901276018}
   - {fileID: 5807652031456668226}
   - {fileID: 7823190651477097065}
   - {fileID: 3684893333336496410}
@@ -1650,7 +1620,7 @@ MonoBehaviour:
   - {fileID: -6460006807613123440}
   - {fileID: -8402901223932109638}
   customLoaderName: 
-  m_renderMode: 1
+  m_renderMode: 0
   m_latencyOptimization: 0
   m_autoColorSubmissionMode: 1
   m_colorSubmissionModes:
@@ -1810,6 +1780,7 @@ MonoBehaviour:
   m_Name: AndroidXRPerformanceMetrics Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: Android XR Performance Metrics
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.androidxr-performance-metrics
@@ -1819,6 +1790,7 @@ MonoBehaviour:
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  m_SupportedMetricPaths: []
 --- !u!114 &3724820147761404505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1832,6 +1804,7 @@ MonoBehaviour:
   m_Name: ARSessionFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Session'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-session
@@ -1925,12 +1898,13 @@ MonoBehaviour:
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-plane
   openxrExtensionStrings: XR_FB_scene XR_FB_spatial_entity XR_FB_spatial_entity_container
-    XR_META_spatial_entity_discovery
+    XR_META_spatial_entity_discovery XR_META_spatial_entity_semantic_label XR_META_spatial_entity_room_mesh
   company: Unity Technologies
   priority: 0
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  m_PlaneProviderType: 1
 --- !u!114 &4746087976659597858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2043,6 +2017,7 @@ MonoBehaviour:
   m_Name: AROcclusionFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Occlusion'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-occlusion
@@ -2109,6 +2084,7 @@ MonoBehaviour:
   m_Name: ARPlaneFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Plane'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-plane
@@ -2154,6 +2130,7 @@ MonoBehaviour:
   m_Name: ARCameraFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: 'Android XR: AR Camera'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-androidxr-camera
@@ -2247,12 +2224,13 @@ MonoBehaviour:
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-plane
   openxrExtensionStrings: XR_FB_scene XR_FB_spatial_entity XR_FB_spatial_entity_container
-    XR_META_spatial_entity_discovery
+    XR_META_spatial_entity_discovery XR_META_spatial_entity_semantic_label XR_META_spatial_entity_room_mesh
   company: Unity Technologies
   priority: 0
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  m_PlaneProviderType: 1
 --- !u!114 &7208448122200842517
 MonoBehaviour:
   m_ObjectHideFlags: 0
