@@ -25,7 +25,6 @@ namespace AUIT.AdaptationObjectives
         {
             if (Objectives.Contains(objective))
                 return;
-
             Objectives.Add(objective);
             RegisterOptimizationTarget(objective.OptimizationTarget);
         }

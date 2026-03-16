@@ -23,6 +23,8 @@ namespace AUIT.PropertyTransitions
         [HideInInspector]
         public CoordinateSystem CurrentCoordinateSystem;
 
+        public bool isManuallyGrabbed;
+
         protected override void Start()
         {
             base.Start();
@@ -33,6 +35,8 @@ namespace AUIT.PropertyTransitions
         public override void Adapt(Layout layout)
         {
             CurrentCoordinateSystem = layout.CoordinateSystem;
+
+            if(isManuallyGrabbed) return;
             switch (layout.CoordinateSystem)
             {
                 case CoordinateSystem.World:

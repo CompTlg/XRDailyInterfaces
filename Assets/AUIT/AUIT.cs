@@ -352,9 +352,16 @@ namespace AUIT
                 for (int i = 0; i < layoutArray.Length; i++)
                 {
                     Layout result = layoutArray[i];
-                    elementArray[i].GetComponent<LocalObjectiveHandler>().Transition(result);
+
+                    //localobjectivehandler is switched off if settings appear, temporarily pausing optimization of that gameobject
+                    if(elementArray[i].GetComponent<LocalObjectiveHandler>().enabled){
+                        elementArray[i].GetComponent<LocalObjectiveHandler>().Transition(result);
+                    }
+                    
+
                 }
             }
+            
         }
 
         public void RegisterAdaptationListener(AdaptationListener adaptationListener)
