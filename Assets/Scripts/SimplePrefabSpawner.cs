@@ -10,15 +10,21 @@ using AUIT.ContextSources;
 using AUIT.AdaptationObjectives;
 public class SimplePrefabSpawner : MonoBehaviour
 {
-    public GameObject prefab;
-    public GameObject previewPrefab;
+    //public GameObject prefab;
+    //public GameObject previewPrefab;
     private GameObject currentPreview;
+    public GameObject[] prefabList;
+    public GameObject[] previewPrefabList;
     int layerMask;
     int LayerIgnoreRaycast;
     GameObject[] spawnablePrefabsList;
     string path;
     private SpawnedPrefabDataList spawnedPrefabDataList;
     private GameObject auitGO;
+    private int selectedIndex = 0;
+    private float nextTimeStep = 0f;
+    public float delayTime = 0.3f;
+
 
     public CameraContextSource cameraContextSource;
 
@@ -42,13 +48,14 @@ public class SimplePrefabSpawner : MonoBehaviour
         spawnablePrefabsList = Resources.LoadAll<GameObject>("SpawnablePrefabs");
 
         LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
-        currentPreview = Instantiate(previewPrefab);
+        
+        currentPreview =previewPrefabList[selectedIndex];
         currentPreview.layer = LayerIgnoreRaycast;
         foreach (Transform currentPreviewChild in currentPreview.transform)
         {
             currentPreviewChild.gameObject.layer = LayerIgnoreRaycast;
         }
-        
+       
         //layerMask = ~(1 << 2);
         layerMask = LayerMask.GetMask("Default");
         //DeleteJson();
@@ -69,16 +76,49 @@ public class SimplePrefabSpawner : MonoBehaviour
 
         if(Physics.Raycast(ray, out RaycastHit hit,100f,layerMask))
         {
+            
             currentPreview.SetActive(true);
             currentPreview.transform.position = hit.point;
             currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up,hit.normal);
-                //Debug.Log("Hit1 " +hit.collider.transform.parent.name);
+            //Debug.Log("Hit1 " +hit.collider.transform.parent.name);
+            if (Time.time > nextTimeStep)
+            {
+                Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+                if (stick.x > 0.8)
+                {
+                    previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
+                    NextPrefab();
+                    previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
 
+                    currentPreview = previewPrefabList[selectedIndex];
+                    currentPreview.layer = LayerIgnoreRaycast;
+                    foreach (Transform currentPreviewChild in currentPreview.transform)
+                    {
+                        currentPreviewChild.gameObject.layer = LayerIgnoreRaycast;
+                    }
+                    nextTimeStep = Time.time + delayTime;
+                }
+                else if (stick.x < -0.8)
+                {
+                    previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
+
+                    PreviousPrefab();
+                    previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
+
+                    currentPreview = previewPrefabList[selectedIndex];
+                    currentPreview.layer = LayerIgnoreRaycast;
+                    foreach (Transform currentPreviewChild in currentPreview.transform)
+                    {
+                        currentPreviewChild.gameObject.layer = LayerIgnoreRaycast;
+                    }
+                    nextTimeStep = Time.time + delayTime;
+                }
+            }
             if (OVRInput.GetDown(OVRInput.Button.Three))
             {
                 Debug.Log("Left Pinching detected.");
 
-                GameObject spawnedObject = Instantiate(prefab,hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal));
+                GameObject spawnedObject = Instantiate(prefabList[selectedIndex],hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal));
                 spawnedObject.SetActive(true);
                 spawnedObject.transform.SetParent(hit.collider.transform.parent);
                 //spawnedObject.layer = LayerMask.NameToLayer("Default");
@@ -180,6 +220,24 @@ public class SimplePrefabSpawner : MonoBehaviour
         Debug.Log("Save file deleted.");
     }
 
+    public void NextPrefab()
+    {
+        selectedIndex = (selectedIndex + 1) % prefabList.Length;
+        Debug.Log("Selected index: " + prefabList[selectedIndex].name);
+    }
+
+    public void PreviousPrefab()
+    {
+        if (selectedIndex == 0)
+        {
+            selectedIndex = prefabList.Length - 1;
+        } else
+        {
+            selectedIndex--;
+        }
+
+    }
+
     //method to make prefab child of room->room element
 
     //TODO new gameobject room element with prefabs as children?
@@ -211,7 +269,7 @@ public class SimplePrefabSpawner : MonoBehaviour
                         {
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
-                            GameObject spawnedObject = Instantiate(prefab,roomChild);
+                            GameObject spawnedObject = Instantiate(prefabList[selectedIndex],roomChild);
 
                             var interElementObj = spawnedObject.GetComponent<AvoidInterElementOcclusionObjective>();
                             var coordTransition = spawnedObject.GetComponent<CoordinateSystemTransition>();
