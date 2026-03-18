@@ -33,16 +33,21 @@ public class PrefabUIManager : MonoBehaviour
         
        
         localObjectiveHandler = GetComponent<LocalObjectiveHandler>();
-        if (prefabUI.activeInHierarchy && !settingsOpen)
+        var coordTransition = GetComponent<AUIT.PropertyTransitions.CoordinateSystemTransition>();
+        bool isGrabbed = coordTransition != null && coordTransition.isManuallyGrabbed;
+
+        
+
+        if (prefabUI.activeInHierarchy)
         {
             //remove from gameObjects to optimize
             //auit.gameObjectsToOptimize.Remove(gameObject);
-            settingsOpen = true;
+            //settingsOpen = true;
             localObjectiveHandler.enabled = false;
             
-        }else if (!prefabUI.activeInHierarchy && settingsOpen)
+        }else if (!prefabUI.activeInHierarchy)
         {
-            settingsOpen = false;
+            //settingsOpen = false;
             //auit.gameObjectsToOptimize.Add(gameObject);
             localObjectiveHandler.enabled = true;
 
@@ -60,10 +65,10 @@ public class PrefabUIManager : MonoBehaviour
 
 
 
-        if(Physics.Raycast(ray, out RaycastHit hit,100f,layerMask))
+        if(Physics.Raycast(ray, out RaycastHit hit,100f,(1<<2)))
         {
            GameObject targetedPrefabUI = hit.collider.transform.parent.Find("ContentUIExample1")?.gameObject;
-           
+           Debug.Log(hit.collider.gameObject+ " " + this.transform.Find("Cube_COL").gameObject);
             if(hit.collider.gameObject == this.transform.Find("Cube_COL").gameObject){ //todo has to change for other gameobjects
 
             if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger,OVRInput.Controller.RTouch) && targetedPrefabUI != null)

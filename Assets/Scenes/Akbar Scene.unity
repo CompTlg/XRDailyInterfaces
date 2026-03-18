@@ -9567,8 +9567,10 @@ MonoBehaviour:
   cameraContextSource: {fileID: 901535096}
   prefabList:
   - {fileID: 613292780848421187}
+  - {fileID: 817463148}
   previewPrefabList:
   - {fileID: 613292780848421187}
+  - {fileID: 817463148}
   delayTime: 0.3
 --- !u!4 &231466157
 Transform:
@@ -44759,6 +44761,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 281282281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &817463148 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6854671738559196196, guid: 680ba64b569c5a445bdb17de41652cc3, type: 3}
+  m_PrefabInstance: {fileID: 2030924393488669927}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &818753489
 GameObject:
   m_ObjectHideFlags: 0
