@@ -2749,7 +2749,7 @@ MonoBehaviour:
     e32: 0
     e33: 1
   SceneSettings:
-    DataSource: 0
+    DataSource: 2
     RoomIndex: -1
     RoomPrefabs:
     - {fileID: 5618556046422172173, guid: 4b454e8ccd6764ccdbcd91586969863f, type: 3}
@@ -9565,8 +9565,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimplePrefabSpawner
   cameraContextSource: {fileID: 901535096}
-  prefabList: []
-  previewPrefabList: []
+  prefabList:
+  - {fileID: 613292780848421187}
+  previewPrefabList:
+  - {fileID: 613292780848421187}
   delayTime: 0.3
 --- !u!4 &231466157
 Transform:

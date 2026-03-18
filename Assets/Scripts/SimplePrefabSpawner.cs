@@ -72,10 +72,16 @@ public class SimplePrefabSpawner : MonoBehaviour
     }
 
     GameObject currentlyGrabbedObject;
+    GameObject currentlyTargetedObject;
 
+    private GameObject hand;
     // Update is called once per frame
     void Update()
     {
+        if (hand == null)
+        {
+            hand = GameObject.Find("RightControllerAnchor");
+        }
 
         Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch), OVRInput.GetLocalControllerRotation(OVRInput.Controller.LTouch)*Vector3.forward);
 
@@ -89,7 +95,7 @@ public class SimplePrefabSpawner : MonoBehaviour
             currentPreview.transform.position = hit.point;
             currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up,hit.normal);
 
-
+            /*
             if (Time.time > nextTimeStep)
             {
                 Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
@@ -122,11 +128,13 @@ public class SimplePrefabSpawner : MonoBehaviour
                     nextTimeStep = Time.time + delayTime;
                 }
             }
-
+*/
             if (OVRInput.GetDown(OVRInput.Button.Three))
             {
 
                 GameObject spawnedObject = Instantiate(prefabList[selectedIndex],hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal));
+
+
                 spawnedObject.SetActive(true);
                 spawnedObject.transform.SetParent(hit.collider.transform.parent);
                 //spawnedObject.layer = LayerMask.NameToLayer("Default");
@@ -170,48 +178,114 @@ public class SimplePrefabSpawner : MonoBehaviour
         Debug.DrawRay(rightControllerPosition, rightControllerDirection *10f, Color.blue,0.1f);
 
         Ray rightControllerRay = new Ray(rightControllerPosition,rightControllerDirection);
+        bool objectIsHit = Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f,(1<<2));
+        GameObject currentlyTargetedObject = null;
+        if(objectIsHit){
+        
+        GameObject rootObject = hit_right.collider.GetComponentInParent<LocalObjectiveHandler>()?.gameObject;
+        /*
+        if(rootObject != null)
+        {
+            Debug.Log("pointing to: " + rootObject.name);
+            //rootObject.GetComponent<LocalObjectiveHandler>().enabled = false;
+            currentlyTargetedObject = rootObject;
+            Debug.Log("Local objective handler off" + rootObject.name);
 
-            if(Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f, layerMask))
+
+        }
+        if(rootObject!= null && currentlyTargetedObject != rootObject)
             {
-                GameObject rootObject = hit_right.collider.GetComponentInParent<LocalObjectiveHandler>()?.gameObject;
+                //currentlyTargetedObject.GetComponent<LocalObjectiveHandler>().enabled = true;
+            Debug.Log("Local objective handler on" + rootObject.name);
+
+            }*/
+        }
+
+        if(currentlyGrabbedObject == null){
+
+            if(Physics.Raycast(rightControllerRay, out  hit_right, 100f,(1<<2)))
+            {
+                //Debug.Log(hit_right.collider.gameObject.name);
+               GameObject rootObject = hit_right.collider.GetComponentInParent<LocalObjectiveHandler>()?.gameObject;
+
+
+
                 if (rootObject != null && rootObject.name.Contains("AUITCube"))
                 {
+                       // GameObject prefabUIManager = currentlyGrabbedObject.transform.parent.Find("ContentUIExample1")?.gameObject;
+
+                    //rootObject.transform.GetComponent<LocalObjectiveHandler>().enabled = false;
                     var coordTransition = rootObject.GetComponent<CoordinateSystemTransition>();
-                    if (OVRInput.GetDown(OVRInput.Button.One))
+                    if (OVRInput.GetDown(OVRInput.Button.One) )
                         {
-                            
                             currentlyGrabbedObject = rootObject;
+
+                            //currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = true;
+                            currentlyGrabbedObject.GetComponent<LocalObjectiveHandler>().enabled = false;
+
                             
 
                             coordTransition.isManuallyGrabbed= true;
 
-                            GameObject hand = GameObject.Find("RightControllerAnchor"); 
+                            //GameObject hand = GameObject.Find("RightControllerAnchor"); 
                                 if (hand != null)
                                 {
-                                    rootObject.transform.GetComponent<LocalObjectiveHandler>().enabled = false;
+                                    //rootObject.transform.GetComponent<LocalObjectiveHandler>().enabled = false;
 
-                                    rootObject.transform.SetParent(hand.transform);
+                                    //rootObject.transform.SetParent(hand.transform);
                                     // currently grabbed object has to be removed from optimization
-
+                                   
+                                    // Add these lines to snap the object to the controller's center
+                                  
+                                    currentlyGrabbedObject.transform.SetParent(hand.transform);
+                                     // currentlyGrabbedObject.transform.localPosition = Vector3.zero;
+                                    //currentlyGrabbedObject.transform.localRotation = Quaternion.identity;
+                                  
                                 }
                 }
+                 
                 
                     
                 }
             }
 
-            if (OVRInput.GetUp(OVRInput.Button.One))
-                {
-                    GameObject prefabUIManager = currentlyGrabbedObject.transform.parent.Find("ContentUIExample1").gameObject;
-                    if(!prefabUIManager.activeInHierarchy){
-                        currentlyGrabbedObject.transform.GetComponent<LocalObjectiveHandler>().enabled = true;
-                    }
-                    var coordTransition = currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>();
-                    coordTransition.isManuallyGrabbed=false;
+           
+    }else{
+        //GameObject prefabUIManager = currentlyGrabbedObject.transform.parent.Find("ContentUIExample1")?.gameObject;
+        
+        if (OVRInput.GetUp(OVRInput.Button.One))
+            {
+
+                    
+                    currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = false;
+                    
+                    //GameObject prefabUIManager = currentlyGrabbedObject.transform.parent.Find("ContentUIExample1")?.gameObject;
 
                     currentlyGrabbedObject.transform.SetParent(null);
+                    currentlyGrabbedObject.transform.GetComponent<CurvePositionTransition>().enabled = true;
+                                    currentlyGrabbedObject.transform.GetComponent<CurveRotationTransition>().enabled = true;
+                    currentlyGrabbedObject = null;
+                    /*
+                if(!prefabUIManager.activeInHierarchy){
+                    currentlyGrabbedObject.GetComponent<LocalObjectiveHandler>().enabled = true;
 
+                }*/
+
+                    
+                    /*
+                GameObject prefabUIManager = rootObject.transform.parent.Find("ContentUIExample1").gameObject;
+                if(!prefabUIManager.activeInHierarchy){
+                rootObject.transform.GetComponent<LocalObjectiveHandler>().enabled = true;
                 }
+                coordTransition = rootObject.GetComponent<CoordinateSystemTransition>();
+                coordTransition.isManuallyGrabbed=false;
+
+                rootObject.transform.SetParent(null);
+                */
+
+            }
+    }
+
     }
 
         public SpawnedPrefabDataList GetJson(){
