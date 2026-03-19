@@ -334,6 +334,27 @@ public class SimplePrefabSpawner : MonoBehaviour
 
     }
 
+    public void DeleteSpawnedObject(GameObject prefab)
+    {
+        var auit = auitGO.GetComponent<AUIT.AUIT>();
+        if (auit.gameObjectsToOptimize.Contains(prefab))
+        {
+            auit.gameObjectsToOptimize.Remove(prefab);
+            auit.RefreshOptimizationObjects();
+        }
+
+        if (table.ContainsKey(prefab))
+        {
+            SpawnedPrefabData data = table[prefab];
+            spawnedPrefabDataList.spawnedPrefabs.Remove(data);
+            table.Remove(prefab);
+            SaveJson();
+        }
+
+        Destroy(prefab);
+    }
+
+
     public void BackToInitialPrefabLocation(GameObject prefab)
     {
         SpawnedPrefabData prefabData = table[prefab];
