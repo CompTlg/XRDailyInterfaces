@@ -47,7 +47,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         //spawnedPrefabDataList = new SpawnedPrefabDataList();
 
         path = Path.Combine(Application.persistentDataPath, "SpawnedPrefabs.json");
-           //DeleteJson();
+        //DeleteJson();
          LoadJson();
         InstantiateSavedPrefabs();
 
@@ -157,6 +157,9 @@ public class SimplePrefabSpawner : MonoBehaviour
                 OVRAnchor anchorID = hit.collider.transform.parent.GetComponent<MRUKAnchor>().Anchor;
                 Debug.Log(anchorID);
                 SpawnedPrefabData spawnedPrefabData = new SpawnedPrefabData();
+
+                string prefabname = spawnedObject.name.Replace("(Clone)","").Trim();
+                spawnedPrefabData.index = System.Array.FindIndex(prefabList,p => p.name == prefabname);
                 spawnedPrefabData.ID = Guid.NewGuid().ToString();
                 spawnedPrefabData.parentAnchorID = anchorID.ToString();
                 spawnedPrefabData.localPrefabPosition = spawnedObject.transform.localPosition;
@@ -193,6 +196,12 @@ public class SimplePrefabSpawner : MonoBehaviour
                 {
                        GameObject prefabUIManager = rootObject.transform.Find("ContentUIExample1")?.gameObject;
 
+                       if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger,OVRInput.Controller.RTouch) && prefabUIManager != null)
+                    {
+                        prefabUIManager.SetActive(!prefabUIManager.activeInHierarchy);
+
+                    }
+
                     var coordTransition = rootObject.GetComponent<CoordinateSystemTransition>();
                     if (OVRInput.GetDown(OVRInput.Button.One) && prefabUIManager != null && prefabUIManager.activeInHierarchy)
                         {
@@ -214,6 +223,10 @@ public class SimplePrefabSpawner : MonoBehaviour
                                   
                                 }
                 }
+
+
+
+                
                  
                 
                     
@@ -377,7 +390,7 @@ public class SimplePrefabSpawner : MonoBehaviour
                         {
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
-                            GameObject spawnedObject = Instantiate(prefabList[selectedIndex],roomChild);
+                            GameObject spawnedObject = Instantiate(prefabList[spawnedPrefab.index],roomChild);
 
                             table.Add(spawnedObject,spawnedPrefab);
 
@@ -420,6 +433,7 @@ public class SimplePrefabSpawner : MonoBehaviour
 [System.Serializable]
     public class SpawnedPrefabData
 {
+    public int index;
     public string ID;
     public string parentAnchorID;
     public Vector3 localPrefabPosition;

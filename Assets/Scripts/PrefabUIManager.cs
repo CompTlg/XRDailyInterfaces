@@ -65,19 +65,7 @@ public class PrefabUIManager : MonoBehaviour
 
 
 
-        if(Physics.Raycast(ray, out RaycastHit hit,100f,(1<<2)))
-        {
-           GameObject targetedPrefabUI = hit.collider.transform.parent.Find("ContentUIExample1")?.gameObject;
-           Debug.Log(hit.collider.gameObject+ " " + this.transform.Find("Cube_COL").gameObject);
-            if(hit.collider.gameObject == this.transform.Find("Cube_COL").gameObject){ //todo has to change for other gameobjects
-
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger,OVRInput.Controller.RTouch) && targetedPrefabUI != null)
-            {
-                prefabUI.SetActive(!targetedPrefabUI.activeInHierarchy);
-            }
-
-        }
-        }
+       
     }
 
    
