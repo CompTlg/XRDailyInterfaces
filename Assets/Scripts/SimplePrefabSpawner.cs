@@ -316,6 +316,12 @@ public class SimplePrefabSpawner : MonoBehaviour
         //get original list and update
         //SpawnedPrefabData prefabData = spawnedPrefabDataList.spawnedPrefabs[prefab];
         SpawnedPrefabData prefabData = table[prefab];
+ MRUK.Instance.RegisterSceneLoadedCallback(() =>
+            {
+        if (room = null)
+        {
+            room = MRUK.Instance.GetCurrentRoom();
+        }
         foreach(Transform child in room.transform)
         {
             string anchorID = child.GetComponent<MRUKAnchor>().Anchor.ToString();
@@ -332,6 +338,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         }
 
 
+    });
     }
 
     public void DeleteSpawnedObject(GameObject prefab)
@@ -359,6 +366,12 @@ public class SimplePrefabSpawner : MonoBehaviour
     {
         SpawnedPrefabData prefabData = table[prefab];
 
+        MRUK.Instance.RegisterSceneLoadedCallback(() =>
+            {
+        if (room = null)
+            {
+                room = MRUK.Instance.GetCurrentRoom();
+            }
 
          foreach(Transform child in room.transform)
         {
@@ -376,6 +389,7 @@ public class SimplePrefabSpawner : MonoBehaviour
 
         
 
+    });
     }
 
     //method to make prefab child of room->room element
