@@ -47,7 +47,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         //spawnedPrefabDataList = new SpawnedPrefabDataList();
 
         path = Path.Combine(Application.persistentDataPath, "SpawnedPrefabs.json");
-        //DeleteJson();
+        DeleteJson();
          LoadJson();
         InstantiateSavedPrefabs();
 
