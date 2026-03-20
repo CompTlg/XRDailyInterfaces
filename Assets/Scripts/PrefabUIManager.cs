@@ -34,7 +34,6 @@ public class PrefabUIManager : MonoBehaviour
        
         localObjectiveHandler = GetComponent<LocalObjectiveHandler>();
         var coordTransition = GetComponent<AUIT.PropertyTransitions.CoordinateSystemTransition>();
-        bool isGrabbed = coordTransition != null && coordTransition.isManuallyGrabbed;
 
         
 

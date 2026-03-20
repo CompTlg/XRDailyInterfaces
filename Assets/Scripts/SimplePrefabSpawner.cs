@@ -47,7 +47,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         //spawnedPrefabDataList = new SpawnedPrefabDataList();
 
         path = Path.Combine(Application.persistentDataPath, "SpawnedPrefabs.json");
-        DeleteJson();
+        //DeleteJson();
          LoadJson();
         InstantiateSavedPrefabs();
 
@@ -185,26 +185,29 @@ public class SimplePrefabSpawner : MonoBehaviour
 
         if(currentlyGrabbedObject == null){
 
-            if(Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f,(1<<2)))
+            if(Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f))
             {
-                //Debug.Log(hit_right.collider.gameObject.name);
+                Debug.Log(hit_right.collider.gameObject);
                GameObject rootObject = hit_right.collider.GetComponentInParent<LocalObjectiveHandler>()?.gameObject;
 
 
 
                 if (rootObject != null)
                 {
+                        Debug.Log("ro " + rootObject);
+
                        GameObject prefabUIManager = rootObject.transform.Find("ContentUIExample1")?.gameObject;
 
                        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger,OVRInput.Controller.RTouch) && prefabUIManager != null)
                     {
                         prefabUIManager.SetActive(!prefabUIManager.activeInHierarchy);
-
+                        Debug.Log(prefabUIManager);
                     }
 
                     var coordTransition = rootObject.GetComponent<CoordinateSystemTransition>();
                     if (OVRInput.GetDown(OVRInput.Button.One) && prefabUIManager != null && prefabUIManager.activeInHierarchy)
                         {
+                            Debug.Log("Grabbing 123");
                             currentlyGrabbedObject = rootObject;
 
                             //currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = true;
@@ -212,7 +215,7 @@ public class SimplePrefabSpawner : MonoBehaviour
 
                             
 
-                            coordTransition.isManuallyGrabbed= true;
+                            //coordTransition.isManuallyGrabbed= true;
 
                                 if (hand != null)
                                 {
@@ -241,7 +244,7 @@ public class SimplePrefabSpawner : MonoBehaviour
             {
 
                     
-                    currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = false;
+                   // currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = false;
                     
                     //GameObject prefabUIManager = currentlyGrabbedObject.transform.parent.Find("ContentUIExample1")?.gameObject;
 
@@ -427,7 +430,7 @@ public class SimplePrefabSpawner : MonoBehaviour
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
                             GameObject spawnedObject = Instantiate(prefabList[spawnedPrefab.index],roomChild);
-
+                            spawnedObject.layer = LayerMask.NameToLayer("Default");
                             table.Add(spawnedObject,spawnedPrefab);
 
                             var interElementObj = spawnedObject.GetComponent<AvoidInterElementOcclusionObjective>();
