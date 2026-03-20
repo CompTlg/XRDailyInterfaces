@@ -362,16 +362,17 @@ public class SimplePrefabSpawner : MonoBehaviour
             auit.gameObjectsToOptimize.Remove(prefab);
             auit.RefreshOptimizationObjects();
         }
+        GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
 
-        if (table.ContainsKey(prefab))
+        if (table.ContainsKey(prefabRoot))
         {
-            SpawnedPrefabData data = table[prefab];
+            SpawnedPrefabData data = table[prefabRoot];
             spawnedPrefabDataList.spawnedPrefabs.Remove(data);
-            table.Remove(prefab);
+            table.Remove(prefabRoot);
             SaveJson();
         }
 
-        Destroy(prefab);
+        Destroy(prefabRoot);
     }
 
 
@@ -459,7 +460,6 @@ public class SimplePrefabSpawner : MonoBehaviour
                                 //coordTransition.TorsoContextSource = auit.globalTorsoSource;
                             }
                           
-                            auitGO.GetComponent<AUIT.AUIT>().gameObjectsToOptimize.Add(spawnedObject);
                             spawnedObject.transform.SetLocalPositionAndRotation(localPrefabPosition,localPrefabRotation);
                             Debug.Log("Loaded Prefab into " + roomChild.name + " " + parentAnchorId);
 
