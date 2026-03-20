@@ -318,7 +318,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         SpawnedPrefabData prefabData = table[prefab];
  MRUK.Instance.RegisterSceneLoadedCallback(() =>
             {
-        if (room = null)
+        if (room == null)
         {
             room = MRUK.Instance.GetCurrentRoom();
         }
@@ -368,11 +368,12 @@ public class SimplePrefabSpawner : MonoBehaviour
 
         MRUK.Instance.RegisterSceneLoadedCallback(() =>
             {
-        if (room = null)
+        if (room == null)
             {
                 room = MRUK.Instance.GetCurrentRoom();
             }
 
+        
          foreach(Transform child in room.transform)
         {
             string anchorID = child.GetComponent<MRUKAnchor>().Anchor.ToString();
