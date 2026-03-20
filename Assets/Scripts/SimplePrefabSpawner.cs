@@ -18,7 +18,9 @@ public class SimplePrefabSpawner : MonoBehaviour
     //public GameObject prefab;
     //public GameObject previewPrefab;
     private GameObject currentPreview;
+
     int layerMask;
+    int interactiveMask;
     int LayerIgnoreRaycast;
     GameObject[] spawnablePrefabsList;
     string path;
@@ -55,7 +57,7 @@ public class SimplePrefabSpawner : MonoBehaviour
     
         spawnablePrefabsList = Resources.LoadAll<GameObject>("SpawnablePrefabs");
 
-        LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
+        LayerIgnoreRaycast = LayerMask.NameToLayer("Spawner Contact");
         currentPreview = prefabList[selectedIndex];
         currentPreview.layer = LayerIgnoreRaycast;
         foreach (Transform currentPreviewChild in currentPreview.transform)
@@ -65,6 +67,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         
         //layerMask = ~(1 << 2);
         layerMask = LayerMask.GetMask("Default");
+        interactiveMask = LayerMask.GetMask("Spawner Contact");
         //DeleteJson();
 
        
@@ -76,6 +79,15 @@ public class SimplePrefabSpawner : MonoBehaviour
 
     private GameObject hand;
     // Update is called once per frame
+
+    private void SetLayerRecursive(GameObject gameObject, int layer)
+    {
+        gameObject.layer = layer;
+        foreach (Transform child in gameObject.transform)
+            {
+                SetLayerRecursive(child.gameObject,layer);
+            }
+    }
     void Update()
     {
         if (hand == null)
@@ -92,6 +104,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         if(Physics.Raycast(ray, out RaycastHit hit,100f,layerMask))
         {
             currentPreview.SetActive(true);
+            currentPreview.layer = LayerIgnoreRaycast;
             currentPreview.transform.position = hit.point;
             currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up,hit.normal);
 
@@ -106,11 +119,7 @@ public class SimplePrefabSpawner : MonoBehaviour
                     previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
  
                     currentPreview = previewPrefabList[selectedIndex];
-                    currentPreview.layer = LayerIgnoreRaycast;
-                    foreach (Transform currentPreviewChild in currentPreview.transform)
-                    {
-                        currentPreviewChild.gameObject.layer = LayerIgnoreRaycast;
-                    }
+                    
                     nextTimeStep = Time.time + delayTime;
                 }
                 else if (stick.x < -0.8)
@@ -120,11 +129,8 @@ public class SimplePrefabSpawner : MonoBehaviour
                     previewPrefabList[selectedIndex].SetActive(!previewPrefabList[selectedIndex].activeSelf);
  
                     currentPreview = previewPrefabList[selectedIndex];
-                    currentPreview.layer = LayerIgnoreRaycast;
-                    foreach (Transform currentPreviewChild in currentPreview.transform)
-                    {
-                        currentPreviewChild.gameObject.layer = LayerIgnoreRaycast;
-                    }
+                    //currentPreview.layer = LayerIgnoreRaycast;
+                    
                     nextTimeStep = Time.time + delayTime;
                 }
             }
@@ -133,10 +139,28 @@ public class SimplePrefabSpawner : MonoBehaviour
             {
 
                 GameObject spawnedObject = Instantiate(prefabList[selectedIndex],hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal));
+                SetLayerRecursive(spawnedObject,LayerIgnoreRaycast);
+                spawnedObject.layer = LayerIgnoreRaycast;
+                
 
+                OVRAnchor anchorID = hit.collider.transform.parent.GetComponent<MRUKAnchor>().Anchor;
+                SpawnedPrefabData spawnedPrefabData = new SpawnedPrefabData();
 
+                string prefabname = spawnedObject.name.Replace("(Clone)","").Trim();
+                spawnedPrefabData.index = System.Array.FindIndex(prefabList,p => p.name == prefabname);
+                spawnedPrefabData.ID = Guid.NewGuid().ToString();
+                spawnedPrefabData.parentAnchorID = anchorID.ToString();
                 spawnedObject.SetActive(true);
                 spawnedObject.transform.SetParent(hit.collider.transform.parent);
+                spawnedPrefabData.localPrefabPosition = spawnedObject.transform.localPosition;
+                spawnedPrefabData.localPrefabRotation = spawnedObject.transform.localRotation;
+                //SpawnedPrefabDataList spawnedPrefabDataList = new SpawnedPrefabDataList();
+                Debug.Log(spawnedPrefabDataList);
+                //Debug.Log(spawnedPrefabData);
+                table.Add(spawnedObject,spawnedPrefabData);
+                spawnedPrefabDataList.spawnedPrefabs.Add(spawnedPrefabData);
+
+                
                 //spawnedObject.layer = LayerMask.NameToLayer("Default");
 
                 var interElementObj = spawnedObject.GetComponent<AvoidInterElementOcclusionObjective>();
@@ -154,21 +178,7 @@ public class SimplePrefabSpawner : MonoBehaviour
                             
                 //spawnedObject.layer = LayerIgnoreRaycast;//TODO change back to avoid prefab flying to you
 
-                OVRAnchor anchorID = hit.collider.transform.parent.GetComponent<MRUKAnchor>().Anchor;
-                Debug.Log(anchorID);
-                SpawnedPrefabData spawnedPrefabData = new SpawnedPrefabData();
-
-                string prefabname = spawnedObject.name.Replace("(Clone)","").Trim();
-                spawnedPrefabData.index = System.Array.FindIndex(prefabList,p => p.name == prefabname);
-                spawnedPrefabData.ID = Guid.NewGuid().ToString();
-                spawnedPrefabData.parentAnchorID = anchorID.ToString();
-                spawnedPrefabData.localPrefabPosition = spawnedObject.transform.localPosition;
-                spawnedPrefabData.localPrefabRotation = spawnedObject.transform.localRotation;
-                //SpawnedPrefabDataList spawnedPrefabDataList = new SpawnedPrefabDataList();
-                Debug.Log(spawnedPrefabDataList);
-                //Debug.Log(spawnedPrefabData);
-                table.Add(spawnedObject,spawnedPrefabData);
-                spawnedPrefabDataList.spawnedPrefabs.Add(spawnedPrefabData);
+                
                 SaveJson();
             }
         }
@@ -185,7 +195,7 @@ public class SimplePrefabSpawner : MonoBehaviour
 
         if(currentlyGrabbedObject == null){
 
-            if(Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f))
+            if(Physics.Raycast(rightControllerRay, out RaycastHit hit_right, 100f,interactiveMask))
             {
                 Debug.Log(hit_right.collider.gameObject);
                GameObject rootObject = hit_right.collider.GetComponentInParent<LocalObjectiveHandler>()?.gameObject;
@@ -194,7 +204,6 @@ public class SimplePrefabSpawner : MonoBehaviour
 
                 if (rootObject != null)
                 {
-                        Debug.Log("ro " + rootObject);
 
                        GameObject prefabUIManager = rootObject.transform.Find("ContentUIExample1")?.gameObject;
 
@@ -207,7 +216,6 @@ public class SimplePrefabSpawner : MonoBehaviour
                     var coordTransition = rootObject.GetComponent<CoordinateSystemTransition>();
                     if (OVRInput.GetDown(OVRInput.Button.One) && prefabUIManager != null && prefabUIManager.activeInHierarchy)
                         {
-                            Debug.Log("Grabbing 123");
                             currentlyGrabbedObject = rootObject;
 
                             //currentlyGrabbedObject.GetComponent<CoordinateSystemTransition>().isManuallyGrabbed = true;
@@ -318,7 +326,9 @@ public class SimplePrefabSpawner : MonoBehaviour
     {
         //get original list and update
         //SpawnedPrefabData prefabData = spawnedPrefabDataList.spawnedPrefabs[prefab];
-        SpawnedPrefabData prefabData = table[prefab];
+        GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
+
+        SpawnedPrefabData prefabData = table[prefabRoot];
  MRUK.Instance.RegisterSceneLoadedCallback(() =>
             {
         if (room == null)
@@ -367,7 +377,9 @@ public class SimplePrefabSpawner : MonoBehaviour
 
     public void BackToInitialPrefabLocation(GameObject prefab)
     {
-        SpawnedPrefabData prefabData = table[prefab];
+       GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
+
+        SpawnedPrefabData prefabData = table[prefabRoot];
 
         MRUK.Instance.RegisterSceneLoadedCallback(() =>
             {
@@ -430,7 +442,13 @@ public class SimplePrefabSpawner : MonoBehaviour
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
                             GameObject spawnedObject = Instantiate(prefabList[spawnedPrefab.index],roomChild);
-                            spawnedObject.layer = LayerMask.NameToLayer("Default");
+
+                            SetLayerRecursive(spawnedObject, LayerIgnoreRaycast);
+                            /*spawnedObject.layer = LayerMask.NameToLayer("Default");
+                            foreach (Transform child in spawnedObject.transform)
+                            {
+                                child.gameObject.layer = LayerMask.NameToLayer("Default");
+                            }*/
                             table.Add(spawnedObject,spawnedPrefab);
 
                             var interElementObj = spawnedObject.GetComponent<AvoidInterElementOcclusionObjective>();
