@@ -10,7 +10,7 @@ using AUIT.ContextSources;
 using AUIT.AdaptationObjectives;
 using System.Linq;
 using System;
-
+using UnityEngine.UI;
 
 
 public class SimplePrefabSpawner : MonoBehaviour
@@ -154,6 +154,15 @@ public class SimplePrefabSpawner : MonoBehaviour
                 spawnedObject.transform.SetParent(hit.collider.transform.parent);
                 spawnedPrefabData.localPrefabPosition = spawnedObject.transform.localPosition;
                 spawnedPrefabData.localPrefabRotation = spawnedObject.transform.localRotation;
+                PrefabSettings prefabSettings = new PrefabSettings();
+                Debug.Log("heree " + spawnedObject.name);
+                Toggle fieldOfViewObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
+                Toggle distanceObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
+                Toggle lookTowardsToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+                prefabSettings.fieldOfViewObjective = fieldOfViewObjectiveToggle.isOn;
+                prefabSettings.distanceObjective = distanceObjectiveToggle.isOn;
+                prefabSettings.lookTowardsObjective = lookTowardsToggle.isOn;
+                spawnedPrefabData.prefabSettings = prefabSettings;
                 //SpawnedPrefabDataList spawnedPrefabDataList = new SpawnedPrefabDataList();
                 Debug.Log(spawnedPrefabDataList);
                 //Debug.Log(spawnedPrefabData);
@@ -357,12 +366,13 @@ public class SimplePrefabSpawner : MonoBehaviour
     public void DeleteSpawnedObject(GameObject prefab)
     {
         var auit = auitGO.GetComponent<AUIT.AUIT>();
-        if (auit.gameObjectsToOptimize.Contains(prefab))
+        GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
+
+        if (auit.gameObjectsToOptimize.Contains(prefabRoot))
         {
-            auit.gameObjectsToOptimize.Remove(prefab);
+            auit.gameObjectsToOptimize.Remove(prefabRoot);
             auit.RefreshOptimizationObjects();
         }
-        GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
 
         if (table.ContainsKey(prefabRoot))
         {
@@ -424,7 +434,7 @@ public class SimplePrefabSpawner : MonoBehaviour
             Vector3 localPrefabPosition = spawnedPrefab.localPrefabPosition;
             Quaternion localPrefabRotation = spawnedPrefab.localPrefabRotation;
 
-
+           
             MRUK.Instance.RegisterSceneLoadedCallback(() =>
             {
                 room = MRUK.Instance.GetCurrentRoom();
@@ -443,6 +453,15 @@ public class SimplePrefabSpawner : MonoBehaviour
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
                             GameObject spawnedObject = Instantiate(prefabList[spawnedPrefab.index],roomChild);
+
+
+                            Toggle fieldOfViewObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
+                            Toggle distanceObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
+                            Toggle lookTowardsToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+
+                            fieldOfViewObjectiveToggle.isOn = spawnedPrefab.prefabSettings.fieldOfViewObjective;
+                            distanceObjectiveToggle.isOn = spawnedPrefab.prefabSettings.distanceObjective;
+                            lookTowardsToggle.isOn = spawnedPrefab.prefabSettings.lookTowardsObjective;
 
                             SetLayerRecursive(spawnedObject, LayerIgnoreRaycast);
                             /*spawnedObject.layer = LayerMask.NameToLayer("Default");
@@ -483,7 +502,29 @@ public class SimplePrefabSpawner : MonoBehaviour
 
             //foreach()
         }
+
     }
+    public void SaveSettings(GameObject prefab)
+    {
+        GameObject prefabRoot = prefab.transform.GetComponentInParent<LocalObjectiveHandler>().gameObject;
+
+        SpawnedPrefabData prefabData = table[prefabRoot];
+
+        PrefabSettings prefabSettings = prefabData.prefabSettings;
+
+        Toggle fieldOfViewObjectiveToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
+        Toggle distanceObjectiveToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
+        Toggle lookTowardsToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+
+        prefabSettings.fieldOfViewObjective = fieldOfViewObjectiveToggle.isOn;
+        prefabSettings.distanceObjective = distanceObjectiveToggle.isOn;
+        prefabSettings.lookTowardsObjective = lookTowardsToggle.isOn;
+
+        SaveJson();
+    }
+
+        
+    
 
 
 }
@@ -495,9 +536,19 @@ public class SimplePrefabSpawner : MonoBehaviour
     public string parentAnchorID;
     public Vector3 localPrefabPosition;
     public Quaternion localPrefabRotation;
+    public PrefabSettings prefabSettings;
 }
 
+[System.Serializable]
 public class SpawnedPrefabDataList
 {
     public List<SpawnedPrefabData> spawnedPrefabs = new List<SpawnedPrefabData>();
+}
+
+[System.Serializable]
+public class PrefabSettings
+{
+    public bool fieldOfViewObjective;
+    public bool distanceObjective;
+    public bool lookTowardsObjective;
 }
