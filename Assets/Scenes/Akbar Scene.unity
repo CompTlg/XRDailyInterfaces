@@ -372,7 +372,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2040974707}
+      - m_Target: {fileID: 1567202741}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 0
@@ -15252,7 +15252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8482341792279899926, guid: eb7fe4f1d2d94244492ab1ed546edbde, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 184
+      value: -0.0008989474
       objectReference: {fileID: 0}
     - target: {fileID: 8482341792306833700, guid: eb7fe4f1d2d94244492ab1ed546edbde, type: 3}
       propertyPath: m_AnchorMax.y
@@ -57677,7 +57677,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8482341792279899926, guid: eb7fe4f1d2d94244492ab1ed546edbde, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 184
+      value: -0.00012737887
       objectReference: {fileID: 0}
     - target: {fileID: 8482341792306833700, guid: eb7fe4f1d2d94244492ab1ed546edbde, type: 3}
       propertyPath: m_AnchorMax.y
@@ -100903,6 +100903,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1300395431}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1567202741 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6381138279518795387, guid: 29f3360d0baac5d4eaef1b8a7b7a7657, type: 3}
+  m_PrefabInstance: {fileID: 1368221319}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1567899987
 GameObject:
   m_ObjectHideFlags: 0
