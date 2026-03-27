@@ -13,7 +13,7 @@ using System;
 using UnityEngine.UI;
 
 
-public class SimplePrefabSpawner : MonoBehaviour
+public class SpatialObjectManager : MonoBehaviour
 {
     //public GameObject prefab;
     //public GameObject previewPrefab;
@@ -52,7 +52,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         DeleteJson();
          LoadJson();
         InstantiateSavedPrefabs();
-
+        MakeRoomMeshInvisible();
         auitGO = GameObject.Find("AUIT");
     
         spawnablePrefabsList = Resources.LoadAll<GameObject>("SpawnablePrefabs");
@@ -415,6 +415,42 @@ public class SimplePrefabSpawner : MonoBehaviour
         }
 
         
+
+    });
+    }
+
+    private void MakeRoomMeshInvisible()
+    {
+         MRUK.Instance.RegisterSceneLoadedCallback(() =>
+            {
+                room = MRUK.Instance.GetCurrentRoom();
+
+                foreach(Transform roomComponent in room.transform)
+                {
+                    MeshRenderer roomComponentMesh = roomComponent.GetComponentInChildren<MeshRenderer>();
+                    if(roomComponentMesh != null)
+                    {
+                        roomComponentMesh.enabled = false;
+                    }
+                }
+
+    });
+    }
+
+    private void MakeRoomMeshVisible()
+    {
+         MRUK.Instance.RegisterSceneLoadedCallback(() =>
+            {
+                room = MRUK.Instance.GetCurrentRoom();
+
+                foreach(Transform roomComponent in room.transform)
+                {
+                    MeshRenderer roomComponentMesh = roomComponent.GetComponentInChildren<MeshRenderer>();
+                    if(roomComponentMesh != null)
+                    {
+                        roomComponentMesh.enabled = true;
+                    }
+                }
 
     });
     }
