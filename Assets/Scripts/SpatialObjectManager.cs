@@ -49,8 +49,8 @@ public class SpatialObjectManager : MonoBehaviour
         //spawnedPrefabDataList = new SpawnedPrefabDataList();
 
         path = Path.Combine(Application.persistentDataPath, "SpawnedPrefabs.json");
-        DeleteJson();
-         LoadJson();
+        //DeleteJson();
+        LoadJson();
         InstantiateSavedPrefabs();
         MakeRoomMeshInvisible();
         auitGO = GameObject.Find("AUIT");
@@ -155,10 +155,14 @@ public class SpatialObjectManager : MonoBehaviour
                 spawnedPrefabData.localPrefabPosition = spawnedObject.transform.localPosition;
                 spawnedPrefabData.localPrefabRotation = spawnedObject.transform.localRotation;
                 PrefabSettings prefabSettings = new PrefabSettings();
-                Debug.Log("heree " + spawnedObject.name);
-                Toggle fieldOfViewObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
-                Toggle distanceObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
-                Toggle lookTowardsToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+                
+                AssignToggleScript assignedToggleScript = spawnedObject.GetComponent<AssignToggleScript>();
+
+
+                Toggle fieldOfViewObjectiveToggle = assignedToggleScript.fieldOfViewObjectiveToggle;
+                Toggle distanceObjectiveToggle = assignedToggleScript.distanceObjectiveToggle;
+                Toggle lookTowardsToggle = assignedToggleScript.lookTowardsToggle;
+
                 prefabSettings.fieldOfViewObjective = fieldOfViewObjectiveToggle.isOn;
                 prefabSettings.distanceObjective = distanceObjectiveToggle.isOn;
                 prefabSettings.lookTowardsObjective = lookTowardsToggle.isOn;
@@ -489,11 +493,14 @@ public class SpatialObjectManager : MonoBehaviour
                             var auit = auitGO.GetComponent<AUIT.AUIT>();
                             GameObject meshGO = roomChild.GetChild(0).gameObject;
                             GameObject spawnedObject = Instantiate(prefabList[spawnedPrefab.index],roomChild);
+                            spawnedObject.SetActive(true);
+                            AssignToggleScript assignedToggleScript = spawnedObject.GetComponent<AssignToggleScript>();
 
 
-                            Toggle fieldOfViewObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
-                            Toggle distanceObjectiveToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
-                            Toggle lookTowardsToggle = spawnedObject.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+                            Toggle fieldOfViewObjectiveToggle = assignedToggleScript.fieldOfViewObjectiveToggle;
+                            Toggle distanceObjectiveToggle = assignedToggleScript.distanceObjectiveToggle;
+                            Toggle lookTowardsToggle = assignedToggleScript.lookTowardsToggle;
+
 
                             fieldOfViewObjectiveToggle.isOn = spawnedPrefab.prefabSettings.fieldOfViewObjective;
                             distanceObjectiveToggle.isOn = spawnedPrefab.prefabSettings.distanceObjective;
@@ -548,9 +555,12 @@ public class SpatialObjectManager : MonoBehaviour
 
         PrefabSettings prefabSettings = prefabData.prefabSettings;
 
-        Toggle fieldOfViewObjectiveToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (1)/ToggleSwitchButton").GetComponent<Toggle>();
-        Toggle distanceObjectiveToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (2)/ToggleSwitchButton").GetComponent<Toggle>();
-        Toggle lookTowardsToggle = prefabRoot.transform.Find("ContentUIExample1/CanvasRoot/UIBackplate+VerticalLayoutGroup/VerticalColumn/Scroll View/Viewport/Content/Horizontal (1)/Section/ToggleWithTextLabel (3)/ToggleSwitchButton").GetComponent<Toggle>();
+        AssignToggleScript assignedToggleScript = prefabRoot.GetComponent<AssignToggleScript>();
+
+
+        Toggle fieldOfViewObjectiveToggle = assignedToggleScript.fieldOfViewObjectiveToggle;
+        Toggle distanceObjectiveToggle = assignedToggleScript.distanceObjectiveToggle;
+        Toggle lookTowardsToggle = assignedToggleScript.lookTowardsToggle;
 
         prefabSettings.fieldOfViewObjective = fieldOfViewObjectiveToggle.isOn;
         prefabSettings.distanceObjective = distanceObjectiveToggle.isOn;
