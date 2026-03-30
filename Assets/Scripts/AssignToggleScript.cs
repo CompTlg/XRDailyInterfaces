@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// To assign toggles of settings ui through the unity editor
+/// </summary>
 public class AssignToggleScript : MonoBehaviour
 {
 

@@ -1,5 +1,9 @@
 using UnityEngine;
 using AUIT.AdaptationObjectives;
+
+/// <summary>
+/// disables localobjectivehandler on object to allow interaction with settings and grabbing
+/// </summary>
 public class PrefabUIManager : MonoBehaviour
 {
 
@@ -16,7 +20,6 @@ public class PrefabUIManager : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
      
-
     void Start()
     {
 
@@ -28,6 +31,8 @@ public class PrefabUIManager : MonoBehaviour
     public bool settingsOpen;
     LocalObjectiveHandler localObjectiveHandler;
     // Update is called once per frame
+
+
     void Update()
     {
         
@@ -54,15 +59,7 @@ public class PrefabUIManager : MonoBehaviour
 
         }
 
-        Vector3 rightControllerPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-        Vector3 rightControllerDirection = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch)*Vector3.forward;
-        
-
-           Ray ray = new Ray(rightControllerPosition,rightControllerDirection);
-
-       // Debug.DrawRay(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch)*Vector3.forward*10f,Color.red);
-
-
+       
 
        
     }
